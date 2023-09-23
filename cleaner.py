@@ -8,7 +8,7 @@ def main():
         
         #opens target file and creates the writer
         with open("clean_data.csv", "w", newline='') as clean_data:
-            headers = ["ChEMBL_ID", "SMILES", "MolecularWeight", "MaxClinicalPhase", "csp3_quota"]
+            headers = ["ChEMBL_ID", "SMILES", "MolecularWeight", "MaxClinicalPhase", "csp3_quota", "AlogP"]
             csvwriter = csv.DictWriter(clean_data, fieldnames=headers)
             
             csvwriter.writeheader()
@@ -29,6 +29,7 @@ def main():
                     "csp3_quota": csp3_quota
                 })
 
+
 def get_csp3_quota(smiles):
     print(smiles)
     molecule = Chem.MolFromSmiles(smiles)
@@ -46,7 +47,7 @@ def get_csp3_quota(smiles):
 
         total_carbons += 1
         hybridization = get_hybridization(molecule, atom_idx)
-        
+
         if hybridization == Chem.rdchem.HybridizationType.SP3:
             sp3_carbons += 1
     try:
@@ -55,8 +56,6 @@ def get_csp3_quota(smiles):
     except ZeroDivisionError:
         return None
     
-
-
 
 def get_hybridization(molecule, atom_idx):
     atom = molecule.GetAtomWithIdx(atom_idx)  # Get atom by index
