@@ -14,13 +14,15 @@ def main():
             csvwriter.writeheader()
             #copies only the indicated values in the new row if all of them are present in source
             for row in csvreader:
-                if row['AlogP'] == "" or row["AlogP"] == "None" or row['Molecular Weight'] == "" or row['Max Phase'] == "" or row["Smiles"] == "":
+                if row["AlogP"] == "None" or row['Molecular Weight'] == "" or row['Max Phase'] == "" or row["Smiles"] == "":
                     continue
                 
+                #sends the smiles to get the csp3 quota. If the molecules has no carbons, ie returns None, skip it.
                 csp3_quota = get_csp3_quota(str(row["Smiles"]))
                 if csp3_quota == None:
                     continue
 
+                #writes into the new file only relevant fields.
                 csvwriter.writerow({
                     'ChEMBL_ID': str(row['ChEMBL ID']), 
                     'SMILES': str(row['Smiles']), 
@@ -31,8 +33,9 @@ def main():
                 })
 
 
+#calculates csp3 proportions with respect total amount of carbon atoms.
 def get_csp3_quota(smiles):
-    print(smiles)
+    #creates molecule from smiles
     molecule = Chem.MolFromSmiles(smiles)
     num_atoms = molecule.GetNumAtoms()
     sp3_carbons = 0
@@ -51,6 +54,8 @@ def get_csp3_quota(smiles):
 
         if hybridization == Chem.rdchem.HybridizationType.SP3:
             sp3_carbons += 1
+    
+    #try/except block handles inorganic (no C) molecules
     try:
         quota = float(sp3_carbons/total_carbons)
         return round(quota, 3)
@@ -58,6 +63,7 @@ def get_csp3_quota(smiles):
         return None
     
 
+#returns hybridization of a given atom
 def get_hybridization(molecule, atom_idx):
     atom = molecule.GetAtomWithIdx(atom_idx)  # Get atom by index
     hybridization = atom.GetHybridization()  # Retrieve hybridization
