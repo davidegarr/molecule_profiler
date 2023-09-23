@@ -14,7 +14,7 @@ def main():
             csvwriter.writeheader()
             #copies only the indicated values in the new row if all of them are present in source
             for row in csvreader:
-                if any(value == "" for value in row.values()):
+                if row['AlogP'] == "" or row["AlogP"] == "None" or row['Molecular Weight'] == "" or row['Max Phase'] == "" or row["Smiles"] == "":
                     continue
                 
                 csp3_quota = get_csp3_quota(str(row["Smiles"]))
@@ -26,7 +26,8 @@ def main():
                     'SMILES': str(row['Smiles']), 
                     'MolecularWeight': float(row['Molecular Weight']), 
                     'MaxClinicalPhase': float(row['Max Phase']),
-                    "csp3_quota": csp3_quota
+                    "csp3_quota": csp3_quota,
+                    "AlogP": float(row["AlogP"])
                 })
 
 
