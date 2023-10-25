@@ -20,7 +20,7 @@ Two python files were developed for this project:
 ### "cleaner.py"
 This script is responsible for pre-processing the raw compound data. The aim is to filter out unwanted data points and retain only the relevant molecular attributes required for further analysis.
 
-## "plotter.py"
+### "plotter.py"
 This script visualizes the molecular attributes of compounds, offering insights into potential correlations between a compound's molecular properties and its clinical trial phase success.
 
 ## Results
